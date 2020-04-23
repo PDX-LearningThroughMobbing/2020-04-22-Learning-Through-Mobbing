@@ -24,9 +24,9 @@ var allEmoji = try! JSONDecoder().decode([Emoji].self, from: Data(contentsOf: Bu
 
 struct ContentView: View {
     var emoji: [Emoji] {
-        guard !searchText.isEmpty else {return allEmoji}
+        guard searchText.count > 2 else {return allEmoji}
         return allEmoji.filter { (emoji) -> Bool in
-            emoji.name.contains(searchText)
+            emoji.name.hasPrefix(searchText)
         }
     }
     @State var searchText = ""
