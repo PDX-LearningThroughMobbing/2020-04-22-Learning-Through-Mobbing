@@ -53,6 +53,14 @@ struct ContentView: View {
     }
 }
 
+//view - spacer
+
+
+//observer - height of keyboard
+
+
+
+
 extension Binding {
     func onChange(onChanged: @escaping () -> ()) -> Binding<Value> {
         return Binding(get: { self.wrappedValue }, set: {
