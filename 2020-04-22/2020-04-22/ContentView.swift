@@ -29,7 +29,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             TextField("Search", text: $searchText.onChange {
-                print("changed")
+                self.filterEmoji()
             })
             
             List(emoji) { emoji in
@@ -47,9 +47,9 @@ struct ContentView: View {
             return
         }
         
-        emoji = allEmoji.filter { emoji in
+        emoji = Array(allEmoji.filter { emoji in
             emoji.name.contains(searchText)
-        }
+        }.prefix(100))
     }
 }
 
