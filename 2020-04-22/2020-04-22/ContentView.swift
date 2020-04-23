@@ -38,6 +38,8 @@ struct ContentView: View {
                     Text(emoji.emoji)
                 }
             }
+            
+            KeyboardSpacer()
         }
     }
     
@@ -53,13 +55,17 @@ struct ContentView: View {
     }
 }
 
-//view - spacer
-
-
-//observer - height of keyboard
-
-
-
+struct KeyboardSpacer: View {
+    @State var height: CGFloat = 0
+    var body: some View {
+        Color.clear
+            .frame(height: height)
+            .onReceive(NotificationCenter.default.publisher(for: UIView.keyboardDidChangeFrameNotification), perform: { notification in
+                let rect = notification.userInfo?[UIView.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero
+                self.height = rect.height
+            })
+    }
+}
 
 extension Binding {
     func onChange(onChanged: @escaping () -> ()) -> Binding<Value> {
