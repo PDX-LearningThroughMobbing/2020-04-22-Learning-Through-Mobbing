@@ -8,23 +8,31 @@
 
 import SwiftUI
 
-struct Emoji: Identifiable, CustomStringConvertible {
+struct Emoji: Codable, Identifiable, CustomStringConvertible {
+    enum CodingKeys: String, CodingKey {
+        case name = "description"
+        case emoji
+    }
     var id: String { return name }
     var description: String { return "\(emoji)" }
     
     var name: String
-    var emoji: Character
+    var emoji: String
 }
 
-var emoji = [
-    Emoji(name: "", emoji: <#T##Character#>)
-]
+var emoji = try! JSONDecoder().decode([Emoji].self, from: Data(contentsOf: Bundle.main.url(forResource: "data", withExtension: "json")!))
 
 struct ContentView: View {
     @State var searchText = ""
     var body: some View {
         VStack {
             TextField("Search", text: $searchText)
+            List(emoji) { emoji in
+                HStack {
+                    Text(emoji.name)
+                    Text(emoji.emoji)
+                }
+            }
         }
     }
 }
