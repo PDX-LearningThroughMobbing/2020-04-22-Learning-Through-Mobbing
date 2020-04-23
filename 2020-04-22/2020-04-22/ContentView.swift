@@ -23,16 +23,15 @@ struct Emoji: Codable, Identifiable, CustomStringConvertible {
 var allEmoji = try! JSONDecoder().decode([Emoji].self, from: Data(contentsOf: Bundle.main.url(forResource: "data", withExtension: "json")!))
 
 struct ContentView: View {
-    var emoji: [Emoji] {
-        guard searchText.count > 2 else {return allEmoji}
-        return allEmoji.filter { (emoji) -> Bool in
-            emoji.name.hasPrefix(searchText)
-        }
-    }
+    @State var emoji: [Emoji] = []
     @State var searchText = ""
+    
     var body: some View {
         VStack {
-            TextField("Search", text: $searchText)
+            TextField("Search", text: $searchText.onChange {
+                print("changed")
+            })
+            
             List(emoji) { emoji in
                 HStack {
                     Text(emoji.name)
@@ -40,6 +39,26 @@ struct ContentView: View {
                 }
             }
         }
+    }
+    
+    func filterEmoji() {
+        guard !searchText.isEmpty else {
+            emoji = allEmoji
+            return
+        }
+        
+        emoji = allEmoji.filter { emoji in
+            emoji.name.contains(searchText)
+        }
+    }
+}
+
+extension Binding {
+    func onChange(onChanged: @escaping () -> ()) -> Binding<Value> {
+        return Binding(get: { self.wrappedValue }, set: {
+            self.wrappedValue = $0
+            onChanged()
+        })
     }
 }
 
