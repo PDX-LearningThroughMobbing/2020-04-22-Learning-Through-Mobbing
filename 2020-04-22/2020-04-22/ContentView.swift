@@ -20,9 +20,15 @@ struct Emoji: Codable, Identifiable, CustomStringConvertible {
     var emoji: String
 }
 
-var emoji = try! JSONDecoder().decode([Emoji].self, from: Data(contentsOf: Bundle.main.url(forResource: "data", withExtension: "json")!))
+var allEmoji = try! JSONDecoder().decode([Emoji].self, from: Data(contentsOf: Bundle.main.url(forResource: "data", withExtension: "json")!))
 
 struct ContentView: View {
+    var emoji: [Emoji] {
+        guard !searchText.isEmpty else {return allEmoji}
+        return allEmoji.filter { (emoji) -> Bool in
+            emoji.name.contains(searchText)
+        }
+    }
     @State var searchText = ""
     var body: some View {
         VStack {
